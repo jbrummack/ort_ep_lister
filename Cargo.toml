@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 ort = { version = "=2.0.0-rc.9", features = [
-    "coreml",
+    #"coreml",
     "cuda",
     "directml",
     "tensorrt",

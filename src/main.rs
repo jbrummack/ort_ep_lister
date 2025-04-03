@@ -3,7 +3,7 @@ use std::time::SystemTime;
 use mock_data::mock_imagenet_tensor;
 use ort::{
     execution_providers::{
-        CUDAExecutionProvider, CoreMLExecutionProvider, DirectMLExecutionProvider,
+        CUDAExecutionProvider, /*CoreMLExecutionProvider,*/ DirectMLExecutionProvider,
         ExecutionProvider, TensorRTExecutionProvider,
     },
     session::Session,
@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     run_sess(CUDAExecutionProvider::default())?;
     run_sess(TensorRTExecutionProvider::default())?;
     run_sess(DirectMLExecutionProvider::default())?;
-    run_sess(CoreMLExecutionProvider::default())?;
+    //run_sess(CoreMLExecutionProvider::default())?;
     run_sess_cpu(2)?;
     run_sess_cpu(4)?;
     run_sess_cpu(6)?;
@@ -59,7 +59,7 @@ pub fn run_sess(ep: impl ExecutionProvider) -> Result<(), ort::Error> {
     let cpu_ts = SystemTime::now();
     session.run(ort::inputs![input_name => mock_data]?)?;
     let benchmark_res = cpu_ts.elapsed().unwrap().as_millis();
-    println!("CNN Inference: {benchmark_res}ms");
+    println!("\tCNN Inference: {benchmark_res}ms");
 
     let mut builder = Session::builder()?;
     ep.register(&mut builder)?;
@@ -70,7 +70,7 @@ pub fn run_sess(ep: impl ExecutionProvider) -> Result<(), ort::Error> {
     let cpu_ts = SystemTime::now();
     session.run(ort::inputs![input_name => mock_data]?)?;
     let benchmark_res = cpu_ts.elapsed().unwrap().as_millis();
-    println!("TRANSFORMER Inference: {benchmark_res}ms");
+    println!("\tTRANSFORMER Inference: {benchmark_res}ms");
     Ok(())
 }
 
@@ -87,7 +87,7 @@ pub fn run_sess_cpu(cores: usize) -> Result<(), ort::Error> {
     let cpu_ts = SystemTime::now();
     session.run(ort::inputs![input_name => mock_data]?)?;
     let benchmark_res = cpu_ts.elapsed().unwrap().as_millis();
-    println!("CNN Inference: {benchmark_res}ms");
+    println!("\tCNN Inference: {benchmark_res}ms");
 
     let input_name = "pixel_values";
     let mock_data = mock_imagenet_tensor()?;
@@ -98,6 +98,6 @@ pub fn run_sess_cpu(cores: usize) -> Result<(), ort::Error> {
     let cpu_ts = SystemTime::now();
     session.run(ort::inputs![input_name => mock_data]?)?;
     let benchmark_res = cpu_ts.elapsed().unwrap().as_millis();
-    println!("TRANSFORMER Inference: {benchmark_res}ms");
+    println!("\tTRANSFORMER Inference: {benchmark_res}ms");
     Ok(())
 }

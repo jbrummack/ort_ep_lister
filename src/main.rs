@@ -8,8 +8,8 @@ use ort::{
     },
     session::Session,
 };
-use tracing::Level;
-use tracing_subscriber::FmtSubscriber;
+//use tracing::Level;
+//use tracing_subscriber::FmtSubscriber;
 mod mock_data;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
